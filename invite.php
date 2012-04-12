@@ -19,30 +19,38 @@ class Invite
      * @var DateTime
      */
     private $_start;
-    
+
     /**
      * The event end date
      * @var DateTime
      */
     private $_end;
-    
+
     /**
      * The name of the user the invite is coming from
      * @var string
      */
     private $_fromName;
-    
+
     /**
      * Sender's email
      * @var string
      */
     private $_fromEmail;
-    
+
     /**
      * The invite body content
      * @var string
      */
     private $_body;
+
+    /**
+     * 
+     * The name of the event
+     * @var string
+     * 
+     */
+    private $_name;
 
     public function __construct()
     {
@@ -108,6 +116,41 @@ class Invite
     }
 
     /**
+     * Set the name of the event
+     * @param string $name
+     * @return \Invite 
+     */
+    public function setName($name)
+    {
+	$this->_name = $name;
+	return $this;
+    }
+
+    /**
+     * An alies of setName
+     * @param string $subject
+     * @return \Invite 
+     */
+    public function setSubject($subject)
+    {
+	$this->setName($subject);
+	return $this;
+    }
+
+    /**
+     * 
+     * An alies of setSubject()
+     * 
+     * @param string $summary
+     * @return \Invite 
+     */
+    public function setSummary($summary)
+    {
+	$this->setSubject($summary);
+	return $this;
+    }
+
+    /**
      * 
      * Set the invite body content
      * 
@@ -117,8 +160,36 @@ class Invite
     public function setBody($body)
     {
 	$this->_body = $body;
-
 	return $this;
+    }
+
+    /**
+     * 
+     * An alies of setBody().
+     * @param string $desc
+     * @return \Invite 
+     */
+    public function setDescription($desc)
+    {
+	$this->setBody($desc);
+	return $this;
+    }
+    
+    /**
+     * 
+     * Get the event name
+     * @return string
+     */
+    public function getName(){
+	return $this -> _name;
+    }
+    
+    /**
+     * An alies of getName();
+     * @return string
+     */
+    public function getSummary(){
+	return $this ->getName();
     }
 
     /**
@@ -128,6 +199,15 @@ class Invite
     public function getBody()
     {
 	return $this->_body;
+    }
+
+    /**
+     * An alies of getBody()
+     * @return string
+     */
+    public function getDescription()
+    {
+	return $this->getBody();
     }
 
     /**
