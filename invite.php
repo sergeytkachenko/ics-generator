@@ -3,10 +3,34 @@
 class Invite
 {
 
+    /**
+     * The event start date
+     * @var DateTime
+     */
     private $_start;
+    
+    /**
+     * The event end date
+     * @var DateTime
+     */
     private $_end;
+    
+    /**
+     * The name of the user the invite is coming from
+     * @var string
+     */
     private $_fromName;
+    
+    /**
+     * Sender's email
+     * @var string
+     */
     private $_fromEmail;
+    
+    /**
+     * The invite body content
+     * @var string
+     */
     private $_body;
 
     public function __construct()
