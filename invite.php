@@ -57,6 +57,12 @@ class Invite
      */
     private $_location;
 
+    /**
+     * The list of guests
+     * @var array
+     */
+    private $_guest = array();
+
     public function __construct()
     {
 	return $this;
@@ -200,6 +206,104 @@ class Invite
     public function setPlace($place)
     {
 	return $this->setLocation($place);
+    }
+
+    /**
+     * 
+     * Add a guest to the list of attendees
+     * @param type $email
+     * @param type $name
+     * @return \Invite 
+     */
+    public function addGuest($email, $name = null)
+    {
+	if (null === $name) {
+	    $name = $email;
+	}
+
+	if (!isset($this->_guest[$email])) {
+	    $this->_guest[$email] = $name;
+	}
+
+	return $this;
+    }
+
+    /**
+     *
+     * Remove a guest from the list
+     * 
+     * @param string $email
+     * @return \Invite 
+     */
+    public function removeGuest($email)
+    {
+	if (isset($this->_guest[$email])) {
+	    unset($this->_guest[$email]);
+	}
+
+	return $this;
+    }
+
+    /**
+     * 
+     * An alies of remove guest
+     * 
+     * @param string $email
+     * @return \Invite
+     */
+    public function removeAttendee($email)
+    {
+	return $this->removeGuest($email);
+    }
+
+    /**
+     * 
+     * Clear a the guest list
+     * @return \Invite 
+     */
+    public function clearGuests()
+    {
+	$this->_guest = array();
+	return $this;
+    }
+
+    /**
+     * 
+     * An alies of clear guests
+     * @return \Invite 
+     */
+    public function clearAttendees()
+    {
+	return $this->clearGuests();
+    }
+    
+    /**
+     * 
+     * Get all guest that's currently set for an this events.
+     * @return array
+     * 
+     */
+    public function getGuests(){
+	return $this -> _guest;
+    }
+    
+    /**
+     * An alies of getGuests();
+     * @return array
+     */
+    public function getAttendees(){
+	return $this ->getGuests();
+    }
+
+    /**
+     * An Alies of add guest
+     * @param string $email
+     * @param string $name
+     * @return Invite 
+     */
+    public function addAttendee($email, $name = null)
+    {
+	return $this->addGuest($email, $name);
     }
 
     /**
