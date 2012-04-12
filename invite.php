@@ -2,7 +2,7 @@
 
 /**
  * 
- * Auther: Ahmad Amin
+ * Author: Ahmad Amin
  * Email : hello@ahmadamin.com
  * Website: http://ahmadmain.com
  * 
