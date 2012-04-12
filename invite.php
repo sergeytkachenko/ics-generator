@@ -276,23 +276,25 @@ class Invite
     {
 	return $this->clearGuests();
     }
-    
+
     /**
      * 
      * Get all guest that's currently set for an this events.
      * @return array
      * 
      */
-    public function getGuests(){
-	return $this -> _guest;
+    public function getGuests()
+    {
+	return $this->_guest;
     }
-    
+
     /**
      * An alies of getGuests();
      * @return array
      */
-    public function getAttendees(){
-	return $this ->getGuests();
+    public function getAttendees()
+    {
+	return $this->getGuests();
     }
 
     /**
@@ -405,6 +407,35 @@ class Invite
     public function getEnd()
     {
 	return $this->_start;
+    }
+
+    /**
+     * 
+     * Download the invite
+     *  
+     */
+    public function download()
+    {
+	$generate = $this->_generate();
+	print $generate;
+    }
+
+    private function _generate()
+    {
+	if ($this->_verify()) {
+	    return "Generated";
+	}
+	
+	return "failed";
+    }
+
+    private function _verify()
+    {
+	if (!$this->_start || !$this -> _end || !$this -> _name) {
+	    return false;
+	}
+	
+	return true;
     }
 
 }
