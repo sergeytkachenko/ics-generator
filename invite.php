@@ -3,7 +3,7 @@
 /**
  * 
  * Auther: Ahmad Amin
- * Email : ahmad@piire.com
+ * Email : hello@ahmadamin.com
  * Website: http://ahmadmain.com
  * 
  * Copyright (c) 2012 Ahmad Amin. All Rights Reserved.
