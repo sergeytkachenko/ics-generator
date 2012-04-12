@@ -48,9 +48,14 @@ class Invite
      * 
      * The name of the event
      * @var string
-     * 
      */
     private $_name;
+
+    /**
+     * The event location
+     * @var string
+     */
+    private $_location;
 
     public function __construct()
     {
@@ -174,22 +179,65 @@ class Invite
 	$this->setBody($desc);
 	return $this;
     }
-    
+
+    /**
+     * 
+     * Set the location where the event will take place
+     * @param string $location
+     * @return \Invite 
+     */
+    public function setLocation($location)
+    {
+	$this->_location = $location;
+	return $this;
+    }
+
+    /**
+     * An alies of setLocation()
+     * @param string $place
+     * @return string
+     */
+    public function setPlace($place)
+    {
+	return $this->setLocation($place);
+    }
+
+    /**
+     * 
+     * Get the location where the event will be held
+     * @return type 
+     */
+    public function getLocation()
+    {
+	return $this->_location;
+    }
+
+    /**
+     * An alies of getLocation()
+     * @return string
+     */
+    public function getPlace()
+    {
+	return $this->getLocation();
+    }
+
     /**
      * 
      * Get the event name
      * @return string
      */
-    public function getName(){
-	return $this -> _name;
+    public function getName()
+    {
+	return $this->_name;
     }
-    
+
     /**
      * An alies of getName();
      * @return string
      */
-    public function getSummary(){
-	return $this ->getName();
+    public function getSummary()
+    {
+	return $this->getName();
     }
 
     /**
