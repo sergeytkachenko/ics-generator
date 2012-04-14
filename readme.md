@@ -20,8 +20,6 @@ to suite your needs.
 
 I would highly recommend you **do not alter or modify the invite.php file or class**. You should do all programming in a separate file/page.
 
-<?php
     require 'invite.php';
 
     $invite = new Invite($unique_id); // You should (not required) provide a **UNIQUE ID**
-?>
