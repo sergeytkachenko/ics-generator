@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 /**
  * 
  * Author: Ahmad Amin
@@ -70,15 +72,35 @@ class Invite
      */
     private $_guests = array();
 
+    /**
+     * 
+     * Not downloaded constant
+     * 
+     * @var const 
+     */
+
+    const NOT_DOWNLOADED = 5;
+
+    /**
+     * 
+     * Downloaded constant
+     * 
+     * @var cost 
+     * 
+     */
+    const DOWNLOADED = 10;
+
     public function __construct($uid = null)
     {
 	if (null === $uid) {
 	    $this->_uid = uniqid(rand(0, getmypid())) . "@ahmadamin.com";
-
-	    return $this;
+	} else {
+	    $this->_uid = $uid . "@ahmadamin.com";
 	}
 
-	$this->_uid = $uid . "@ahmadamin.com";
+	if (!isset($_SESSION['calander_invite_downloaded'])) {
+	    $_SESSION['calander_invite_downloaded'] = self::NOT_DOWNLOADED;
+	}
 	return $this;
     }
 
@@ -144,7 +166,7 @@ class Invite
 
 	return $this;
     }
-    
+
     /**
      * 
      * An alias of setFrom()
@@ -156,9 +178,9 @@ class Invite
      */
     public function setOrganizer($email, $name = null)
     {
-	return $this ->setFrom($email, $name);
+	return $this->setFrom($email, $name);
     }
-    
+
     /**
      * Set the name of the event
      * @param string $name
@@ -459,6 +481,7 @@ class Invite
      */
     public function download()
     {
+	$_SESSION['calander_invite_downloaded'] = self::DOWNLOADED;
 	$generate = $this->_generate();
 	header("Pragma: public");
 	header("Expires: 0");
@@ -470,6 +493,24 @@ class Invite
 	header("Content-Transfer-Encoding: binary");
 	header("Content-Length: " . strlen($generate));
 	print $generate;
+    }
+
+    /**
+     * 
+     * Check to see if the invite has been downloaded or not
+     * 
+     * @return boolean 
+     * 
+     */
+    public function isDownloaded()
+    {
+	print $_SESSION['calander_invite_downloaded'];
+	if ($_SESSION['calander_invite_downloaded'] == self::DOWNLOADED) {
+
+	    return true;
+	}
+
+	return false;
     }
 
     public function isValid()

@@ -1,6 +1,6 @@
 <?php
 
-require "invite.php";
+require "../invite.php";
 
 $invite = new Invite();
 $invite
@@ -13,4 +13,11 @@ $invite
 	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
 $invite->download();
+
+
+// To check and see if the invite has been downloaded
+// you the code below
+//if($invite ->isDownloaded()){
+//    ...
+//}
 ?>
