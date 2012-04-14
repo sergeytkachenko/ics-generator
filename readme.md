@@ -18,5 +18,10 @@ As mentioned above this class was designed to be as simple as possible to use. A
 PHP. If you are not familiar with OO PHP that is also not a problem because you can just copy and paste this example below and modify the invite details
 to suite your needs.
 
-I would highly recommend you **do not alter or modify the invite.ics file**. You should do all programming in a separate file/page.
+I would highly recommend you **do not alter or modify the invite.php file or class**. You should do all programming in a separate file/page.
 
+<?php
+    require 'invite.php';
+
+    $invite = new Invite($unique_id); // You should (not required) provide a **UNIQUE ID**
+?>
