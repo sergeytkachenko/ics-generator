@@ -144,7 +144,21 @@ class Invite
 
 	return $this;
     }
-
+    
+    /**
+     * 
+     * An alias of setFrom()
+     * 
+     * @param string $email
+     * @param string $name
+     * @return \Invite
+     * 
+     */
+    public function setOrganizer($email, $name = null)
+    {
+	return $this ->setFrom($email, $name);
+    }
+    
     /**
      * Set the name of the event
      * @param string $name

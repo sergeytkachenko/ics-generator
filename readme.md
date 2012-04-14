@@ -29,7 +29,7 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
 	    ->setStart(new DateTime('2013-03-16 12:00AM EST'))
 	    ->setEnd(new DateTime('2013-03-16 11:59PM EST'))
 	    ->setLocation("Queens, New York")
-	    ->setFrom("john@doe.com", "John Doe")
+	    ->setOrganizer("john@doe.com", "John Doe")
 	    ->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
     $invite -> download();
