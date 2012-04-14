@@ -39,7 +39,7 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
     $invite -> download();
 
 If you do now want to use the chaining method as listed about you can use it as such:
-<code>
+<code type="php" >
     require 'invite.php';
 
     $invite = new Invite($unique_id);
