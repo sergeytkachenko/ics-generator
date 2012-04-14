@@ -502,7 +502,7 @@ class Invite
      * @return boolean 
      * 
      */
-    public function isDownloaded()
+    public static function isDownloaded()
     {
 	print $_SESSION['calander_invite_downloaded'];
 	if ($_SESSION['calander_invite_downloaded'] == self::DOWNLOADED) {
