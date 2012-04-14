@@ -20,7 +20,7 @@ PHP or just understand code at least. If you are not familiar with OO PHP that i
 and modify the details to suite your needs.
 
 I would highly recommend you **do not alter or modify the invite.php file or class**. You should do all your programming and customization in a separate file.
-
+<pre>
     // alter path based on where in your file structure the invite.php file is located
     require 'invite.php';
 
@@ -37,7 +37,7 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
 		->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
     $invite -> download();
-
+</pre>
 If you do now want to use the chaining method as listed about you can use it as such:
 
     require 'invite.php';
