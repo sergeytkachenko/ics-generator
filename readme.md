@@ -40,21 +40,22 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
 
 If you do now want to use the chaining method as listed about you can use it as such:
 ```php
-    <?php
-	    require 'invite.php';
+<?php
+	require 'invite.php';
 
-	    $invite = new Invite($unique_id);
+	$invite = new Invite($unique_id);
 
-	    $invite ->setSubject("Test Demo Invite");
-	    $invite ->setDescription("The is a test invite for you to see how this thing actually works");
-	    $invite ->setStart(new DateTime('2013-03-16 12:00AM EST'));
-	    $invite ->setEnd(new DateTime('2013-03-16 11:59PM EST'));
-	    $invite ->setLocation("Queens, New York");
-	    $invite ->setOrganizer("john@doe.com", "John Doe");
-	    $invite ->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
+	$invite ->setSubject("Test Demo Invite");
+	$invite ->setDescription("The is a test invite for you to see how this thing actually works");
+	$invite ->setStart(new DateTime('2013-03-16 12:00AM EST'));
+	$invite ->setEnd(new DateTime('2013-03-16 11:59PM EST'));
+	$invite ->setLocation("Queens, New York");
+	$invite ->setOrganizer("john@doe.com", "John Doe");
+	$invite ->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
-	    $invite -> download();
-    ?>```
+	$invite -> download();
+?>
+```
 
 The generated output file is **invite.ics**. You can open that file with Outlook or iCal.
 
