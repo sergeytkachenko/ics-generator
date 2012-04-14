@@ -56,7 +56,7 @@ If you do now want to use the chaining method as listed about you can use it as 
 
 The generated output file is **invite.ics**. You can open that file with Outlook or iCal.
 
-If you would like to check and see if the invite has been downloaded or not you can use Invite::isDownloaded() method as listed below.
+If you would like to check and see if the invite has been downloaded or not you can use **Invite::isDownloaded()** method as listed below.
 
     if(Invite::isDownloaded()){
 	    // do something ...
