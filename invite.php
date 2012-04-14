@@ -10,8 +10,6 @@ session_start();
  * 
  * Copyright (c) 2012 Ahmad Amin. All Rights Reserved.
  * 
- * You are free to use, modify and redistribute this code.
- * 
  */
 class Invite
 {
