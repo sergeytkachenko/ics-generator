@@ -58,14 +58,33 @@ class Invite
     private $_location;
 
     /**
+     *
+     * The content of the invite
+     * @var string
+     */
+    private $_generated;
+
+    /**
      * The list of guests
      * @var array
      */
-    private $_guest = array();
+    private $_guests = array();
 
-    public function __construct()
+    public function __construct($uid = null)
     {
+	if (null === $uid) {
+	    $this->_uid = uniqid(rand(0, getmypid())) . "@ahmadamin.com";
+
+	    return $this;
+	}
+
+	$this->_uid = $uid . "@ahmadamin.com";
 	return $this;
+    }
+
+    public function getUID()
+    {
+	return $this->_uid;
     }
 
     /**
@@ -222,7 +241,7 @@ class Invite
 	}
 
 	if (!isset($this->_guest[$email])) {
-	    $this->_guest[$email] = $name;
+	    $this->_guests[$email] = $name;
 	}
 
 	return $this;
@@ -237,8 +256,8 @@ class Invite
      */
     public function removeGuest($email)
     {
-	if (isset($this->_guest[$email])) {
-	    unset($this->_guest[$email]);
+	if (isset($this->_guests[$email])) {
+	    unset($this->_guests[$email]);
 	}
 
 	return $this;
@@ -263,7 +282,7 @@ class Invite
      */
     public function clearGuests()
     {
-	$this->_guest = array();
+	$this->_guests = array();
 	return $this;
     }
 
@@ -285,7 +304,7 @@ class Invite
      */
     public function getGuests()
     {
-	return $this->_guest;
+	return $this->_guests;
     }
 
     /**
@@ -361,7 +380,7 @@ class Invite
      */
     public function getDescription()
     {
-	return $this->getBody();
+	return wordwrap($this->getBody(), 75, "\n\t", true);
     }
 
     /**
@@ -395,8 +414,14 @@ class Invite
      * Get the start time set for the even
      * @return string
      */
-    public function getStart()
+    public function getStart($formatted = null)
     {
+	if (null !== $formatted) {
+	    return $this->_start
+			    ->setTimezone(new DateTimeZone("GMT"))
+			    ->format("Ymd\This\Z");
+	}
+
 	return $this->_start;
     }
 
@@ -404,38 +429,108 @@ class Invite
      * Get the end time set for the event
      * @return string
      */
-    public function getEnd()
+    public function getEnd($formatted = null)
     {
-	return $this->_start;
+	if (null !== $formatted) {
+	    return $this->_end
+			    ->setTimezone(new DateTimeZone("GMT"))
+			    ->format("Ymd\This\Z");
+	}
+	return $this->_end;
     }
 
     /**
      * 
-     * Download the invite
-     *  
+     * Call this function to download the invite. 
      */
     public function download()
     {
 	$generate = $this->_generate();
+	header("Pragma: public");
+	header("Expires: 0");
+	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+	header("Cache-Control: public");
+	header("Content-Description: File Transfer");
+	header("Content-type: application/octet-stream");
+	header("Content-Disposition: attachment; filename=\"invite.ics\"");
+	header("Content-Transfer-Encoding: binary");
+	header("Content-Length: " . strlen($generate));
 	print $generate;
     }
 
-    private function _generate()
+    public function isValid()
     {
-	if ($this->_verify()) {
-	    return "Generated";
+	if ($this->_start || $this->_end || $this->_name ||
+		$this->_fromEmail || $this->_fromName || is_array($this->_guests)) {
+	    return true;
 	}
-	
-	return "failed";
+
+	return false;
     }
 
-    private function _verify()
+    /**
+     * 
+     * Get the content of for and invite. Returns false if the invite
+     * was unable to be generated.
+     * @return string|boolean 
+     */
+    public function getInviteContent()
     {
-	if (!$this->_start || !$this -> _end || !$this -> _name) {
+	if (!$this->_generated) {
+	    if ($this->isValid()) {
+		if ($this->_generate()) {
+		    return $this->_generated;
+		}
+	    }
 	    return false;
 	}
-	
-	return true;
+
+	return $this->_generated;
+    }
+
+    /**
+     * 
+     * The function generates the actual content of the ICS
+     * file and returns it.
+     * 
+     * @return string|bool
+     */
+    private function _generate()
+    {
+	if ($this->isValid()) {
+
+	    $content = "BEGIN:VCALENDAR\n";
+	    $content .= "VERSION:2.0\n";
+	    $content .= "CALSCALE:GREGORIAN\n";
+	    $content .= "METHOD:REQUEST\n";
+	    $content .= "BEGIN:VEVENT\n";
+	    $content .= "UID:{$this->getUID()}\n";
+	    $content .= "DTSTART:{$this->getStart(true)}\n";
+	    $content .= "DTEND:{$this->getEnd(true)}\n";
+	    $content .= "DTSTAMP:{$this->getStart(true)}\n";
+	    $content .= "ORGANIZER;CN={$this->getFromName()}:mailto:{$this->getFromEmail()}\n";
+
+	    foreach ($this->getAttendees() as $email => $name)
+	    {
+		$content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\n";
+	    }
+
+	    $content .= "CREATED:\n";
+	    $content .= "DESCRIPTION:{$this->getDescription()}\n";
+	    $content .= "LAST-MODIFIED:{$this->getStart(true)}\n";
+	    $content .= "LOCATION:{$this->getLocation()}\n";
+	    $content .= "SUMMARY:{$this->getName()}\n";
+	    $content .= "SEQUENCE:0\n";
+	    $content .= "STATUS:NEEDS-ACTION\n";
+	    $content .= "TRANSP:OPAQUE\n";
+	    $content .= "END:VEVENT\n";
+	    $content .= "END:VCALENDAR";
+
+	    $this->_generated = $content;
+	    return $this->_generated;
+	}
+
+	return false;
     }
 
 }
