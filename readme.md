@@ -36,4 +36,4 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
 
 The generated output file is **invite.ics**. You can open that file with Outlook or iCal.
 
-As you can see it only takes a couple lines of code to use the library. Although the library is composed of many methods to do a wide variety of things most aren't required.
+I would highly recommend you take a look at the invite.php file for other methods and alias of these methods.
