@@ -39,7 +39,7 @@ I would highly recommend you **do not alter or modify the invite.php file or cla
     $invite -> download();
 
 If you do now want to use the chaining method as listed about you can use it as such:
-
+```php
     <?php
 	    require 'invite.php';
 
@@ -55,6 +55,7 @@ If you do now want to use the chaining method as listed about you can use it as 
 
 	    $invite -> download();
     ?>
+```
 The generated output file is **invite.ics**. You can open that file with Outlook or iCal.
 
 I would highly recommend you take a look at the invite.php file for other methods and alias of these methods.
