@@ -15,8 +15,7 @@ $invite
 $invite->download();
 
 
-// To check and see if the invite has been downloaded
-// you the code below
+// To check and see if the invite has been downloaded use the code below
 //if($invite ->isDownloaded()){
 //    ...
 //}
