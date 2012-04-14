@@ -12,7 +12,7 @@ $invite
 	->setOrganizer("john@doe.com", "John Doe")
 	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
-$invite->download();
+//$invite->download();
 
 
 // To check and see if the invite has been downloaded use the code below
