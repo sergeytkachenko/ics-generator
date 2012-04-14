@@ -21,22 +21,22 @@ and modify the details to suite your needs.
 
 I would highly recommend you **do not alter or modify the invite.php file or class**. You should do all your programming and customization in a separate file.
 <pre>
-    // alter path based on where in your file structure the invite.php file is located
-    require 'invite.php';
+// alter path based on where in your file structure the invite.php file is located
+require 'invite.php';
 
-    $invite = new Invite($unique_id); // You should (not required) provide a UNIQUE ID
+$invite = new Invite($unique_id); // You should (not required) provide a UNIQUE ID
 
-    // As you may notice this library supports chaining which may be a little weird for many PHP programmer
-    $invite 
-		->setSubject("Test Demo Invite")
-		->setDescription("The is a test invite for you to see how this thing actually works") 
-		->setStart(new DateTime('2013-03-16 12:00AM EST'))
-		->setEnd(new DateTime('2013-03-16 11:59PM EST'))
-		->setLocation("Queens, New York")
-		->setOrganizer("john@doe.com", "John Doe")
-		->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
+// As you may notice this library supports chaining which may be a little weird for many PHP programmer
+$invite 
+	    ->setSubject("Test Demo Invite")
+	    ->setDescription("The is a test invite for you to see how this thing actually works") 
+	    ->setStart(new DateTime('2013-03-16 12:00AM EST'))
+	    ->setEnd(new DateTime('2013-03-16 11:59PM EST'))
+	    ->setLocation("Queens, New York")
+	    ->setOrganizer("john@doe.com", "John Doe")
+	    ->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
 
-    $invite -> download();
+$invite -> download();
 </pre>
 If you do now want to use the chaining method as listed about you can use it as such:
 
