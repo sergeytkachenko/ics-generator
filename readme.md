@@ -56,6 +56,7 @@ If you do now want to use the chaining method as listed about you can use it as 
 
 The generated output file is **invite.ics**. You can open that file with Outlook or iCal.
 
+### Step 3: Check if downloaded (optional)
 If you would like to check and see if the invite has been downloaded or not you can use **Invite::isDownloaded()** method as listed below.
 
     if(Invite::isDownloaded()){
@@ -65,4 +66,5 @@ If you would like to check and see if the invite has been downloaded or not you 
 As you may notice the **isDownloaded()** method is a static method so you **do not need to create a new Invite() object to call it**. At anytime you can
 use it to check and see if the invite has been downloaded.
 
+### Step 4: Lead More
 *I would highly recommend you take a look at the invite.php file for other methods and alias of these methods.*
