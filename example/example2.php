@@ -1,11 +1,11 @@
 <?php
-/**
- * This example shows you the basic was to use the invite feature
- * where you create and download the invite at the sametime.
- * 
- * Look at example2.php for a more advance usage method. 
- */
 
+/**
+ * 
+ * Example2: This example shows you how to generate an invite, save it
+ * to file and download it at a later time.
+ *  
+ */
 
 require "../invite.php";
 
@@ -17,8 +17,11 @@ $invite
 	->setEnd(new DateTime('2013-03-16 11:59PM EST'))
 	->setLocation("Queens, New York")
 	->setOrganizer("john@doe.com", "John Doe")
-	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
+	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin")
+	->generate() // generate the invite
+	->save(); // save it to a file
 
-$invite->download();
+$download_link = Invite::getSavedPath();
 
 ?>
+<a href="<?=$download_link;?>" >Dowload Invite</a>
