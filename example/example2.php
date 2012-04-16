@@ -21,6 +21,8 @@ $invite
 	->generate() // generate the invite
 	->save(); // save it to a file
 
+// as you may notice this is a static method
+// it is indipendent of the object.
 $download_link = Invite::getSavedPath();
 
 ?>
