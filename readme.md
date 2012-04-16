@@ -1,6 +1,6 @@
 
 ## ICS File Generator
-
+<p style="background-color: yellow" >Version 0.2 Released.</p>
 This class generates an ICS file that users can download and add to their Calender. It is compatible with any software that supports
 standard ICS files which includes Outlook, Google Calander, iCal and many more.
 
