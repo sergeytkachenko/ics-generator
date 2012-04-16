@@ -10,7 +10,11 @@ $invite
 	->setEnd(new DateTime('2013-03-16 11:59PM EST'))
 	->setLocation("Queens, New York")
 	->setOrganizer("john@doe.com", "John Doe")
-	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin");
+	->addAttendee("ahmad@ahmadamin.com", "Ahmad Amin")
+	->generate()
+	->save();
+
+//Invite::getSavedPath();
 
 //$invite->download();
 

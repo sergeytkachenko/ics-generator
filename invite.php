@@ -69,6 +69,7 @@ class Invite
      * @var array
      */
     private $_guests = array();
+    private $_savePath = "./invite/";
 
     /**
      * 
@@ -495,6 +496,63 @@ class Invite
 
     /**
      * 
+     * Save the invite to a file
+     * 
+     * @param string $path
+     * @param string $name
+     * @return \Invite 
+     * 
+     */
+    public function save($path = null, $name = null)
+    {
+	if (null === $path) {
+	    $path = $this->_savePath;
+	}
+
+	if (null === $name) {
+	    $name = $this->getUID() . '.ics';
+	}
+
+	// create path if it doesn't exist
+	if (!is_dir($path)) {
+	    try {
+		mkdir($path, 0777, TRUE);
+	    } catch (Exception $e) {
+		die('Unabled to create save path.');
+	    }
+	}
+
+	if (($data = $this->getInviteContent()) == TRUE) {
+	    try {
+		$handler = fopen($path . $name, 'w+');
+		$f = fwrite($handler, $data);
+		fclose($handler);
+
+		// saving the save name
+		$_SESSION['savepath'] = $path . $name;
+	    } catch (Exception $e) {
+		die('Unabled to write invite to file.');
+	    }
+	}
+
+	return $this;
+    }
+
+    /**
+     * Get the saved invite path
+     * @return string|boolean 
+     */
+    public static function getSavedPath()
+    {
+	if(isset($_SESSION['savepath'])){
+	    return $_SESSION['savepath'];
+	}
+	
+	return false;
+    }
+
+    /**
+     * 
      * Check to see if the invite has been downloaded or not
      * 
      * @return boolean 
@@ -503,7 +561,6 @@ class Invite
     public static function isDownloaded()
     {
 	if ($_SESSION['calander_invite_downloaded'] == self::DOWNLOADED) {
-
 	    return true;
 	}
 
@@ -538,6 +595,19 @@ class Invite
 	}
 
 	return $this->_generated;
+    }
+
+    /**
+     *
+     * Generate the content for the invite.
+     * 
+     * @return \Invite 
+     * 
+     */
+    public function generate()
+    {
+	$this->_generate();
+	return $this;
     }
 
     /**
