@@ -66,6 +66,8 @@ If you would like to check and see if the invite has been downloaded or not you 
 
 As you may notice the **isDownloaded()** method is a static method so you **do not need to create a new Invite() object to call it**. At anytime you can
 use it to check and see if the invite has been downloaded.
+### Step 4: Advance Usage
+Please look at example/example2.php for a more advance usage method which allows you to generate and save the file to be downloaded at a later time.
 
-### Step 4: Lead More
+### Step 5: Lead More
 *I would highly recommend you take a look at the invite.php file for other methods and alias of these methods.*
