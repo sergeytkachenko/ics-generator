@@ -454,7 +454,7 @@ class Invite
 	if (null !== $formatted) {
 	    return $this->_start
 			    ->setTimezone(new DateTimeZone("GMT"))
-			    ->format("Ymd\This\Z");
+			    ->format("Ymd\THis\Z");
 	}
 
 	return $this->_start;
@@ -469,7 +469,7 @@ class Invite
 	if (null !== $formatted) {
 	    return $this->_end
 			    ->setTimezone(new DateTimeZone("GMT"))
-			    ->format("Ymd\This\Z");
+			    ->format("Ymd\THis\Z");
 	}
 	return $this->_end;
     }
@@ -544,10 +544,10 @@ class Invite
      */
     public static function getSavedPath()
     {
-	if(isset($_SESSION['savepath'])){
+	if (isset($_SESSION['savepath'])) {
 	    return $_SESSION['savepath'];
 	}
-	
+
 	return false;
     }
 
