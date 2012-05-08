@@ -452,9 +452,7 @@ class Invite
     public function getStart($formatted = null)
     {
 	if (null !== $formatted) {
-	    return $this->_start
-			    ->setTimezone(new DateTimeZone("GMT"))
-			    ->format("Ymd\THis\Z");
+	    return $this->_star->format("Ymd\THis\Z");
 	}
 
 	return $this->_start;
@@ -467,9 +465,7 @@ class Invite
     public function getEnd($formatted = null)
     {
 	if (null !== $formatted) {
-	    return $this->_end
-			    ->setTimezone(new DateTimeZone("GMT"))
-			    ->format("Ymd\THis\Z");
+	    return $this->_end->format("Ymd\THis\Z");
 	}
 	return $this->_end;
     }
