@@ -452,7 +452,7 @@ class Invite
     public function getStart($formatted = null)
     {
 	if (null !== $formatted) {
-	    return $this->_star->format("Ymd\THis\Z");
+	    return $this->_start->format("Ymd\THis\Z");
 	}
 
 	return $this->_start;
