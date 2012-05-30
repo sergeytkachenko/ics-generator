@@ -415,7 +415,7 @@ class Invite
      */
     public function getDescription()
     {
-	return wordwrap($this->getBody(), 75, "\n\t", true);
+	return $this->getBody();
     }
 
     /**
