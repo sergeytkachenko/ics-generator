@@ -659,7 +659,7 @@ class Invite
 		$content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\n";
 	    }
 
-	    $content .= "CREATED:{$this->getCreated(true)}";
+	    $content .= "CREATED:{$this->getCreated(true)}\n";
 	    $content .= "DESCRIPTION:{$this->getDescription()}\n";
 	    $content .= "LAST-MODIFIED:{$this->getStart(true)}\n";
 	    $content .= "LOCATION:{$this->getLocation()}\n";
