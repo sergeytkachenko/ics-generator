@@ -13,7 +13,12 @@ session_start();
  */
 class Invite
 {
-
+    /**
+     * The event creation date
+     * @var DateTime
+     */
+    private $_created;
+    
     /**
      * The event start date
      * @var DateTime
@@ -124,6 +129,15 @@ class Invite
 	return $this;
     }
 
+    /**
+     * Set the creation datetime
+     * @param DateTime $created
+     * @return \Invite
+     */
+    public function setCreated(DateTime $created){
+        $this->_created = $created;
+        return $this;
+    }
     /**
      * Set the start datetime
      * @param DateTime $start
@@ -446,6 +460,18 @@ class Invite
     }
 
     /**
+     * Get the creation time set for the event
+     * @return string
+     */
+    public function getCreated($formatted = null)
+    {
+        if (null !== $formatted) {
+	    return $this->_created->format("Ymd\THis\Z");
+	}
+
+	return $this->_created;
+    }
+    /**
      * Get the start time set for the even
      * @return string
      */
@@ -565,7 +591,7 @@ class Invite
 
     public function isValid()
     {
-	if ($this->_start || $this->_end || $this->_name ||
+	if ($this->_created || $this->_start || $this->_end || $this->_name ||
 		$this->_fromEmail || $this->_fromName || is_array($this->_guests)) {
 	    return true;
 	}
@@ -633,7 +659,7 @@ class Invite
 		$content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\n";
 	    }
 
-	    $content .= "CREATED:\n";
+	    $content .= "CREATED:{$this->getCreated(true)}";
 	    $content .= "DESCRIPTION:{$this->getDescription()}\n";
 	    $content .= "LAST-MODIFIED:{$this->getStart(true)}\n";
 	    $content .= "LOCATION:{$this->getLocation()}\n";
