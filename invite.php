@@ -465,7 +465,7 @@ class Invite
      */
     public function getCreated($formatted = null)
     {
-        if (null !== $formatted) {
+        if (null !== $formatted && $this->_created!=null) {
 	    return $this->_created->format("Ymd\THis\Z");
 	}
 
@@ -477,7 +477,7 @@ class Invite
      */
     public function getStart($formatted = null)
     {
-	if (null !== $formatted) {
+	if (null !== $formatted && $this->_start!=null) {
 	    return $this->_start->format("Ymd\THis\Z");
 	}
 
@@ -490,7 +490,7 @@ class Invite
      */
     public function getEnd($formatted = null)
     {
-	if (null !== $formatted) {
+	if (null !== $formatted && $this->_end!=null) {
 	    return $this->_end->format("Ymd\THis\Z");
 	}
 	return $this->_end;
