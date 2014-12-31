@@ -1,0 +1,34 @@
+{
+    "name": "hising/ics-generator",
+
+    "description": "This class dynamically generates .ics files",
+
+    "license": "MIT",
+
+    "authors": [
+        {
+            "name": "Ahmad Amin",
+            "email": "hello@ahmadamin.com"
+        },
+        {
+            "name": "Mattias Hising",
+            "email": "mattias@ridgestreet.se"
+        }
+    ],
+
+    "minimum-stability": "dev",
+
+    "require": {
+        "php": ">=5.4.0"
+    },
+
+    "support": {
+        "issues": "https://github.com/hising/ics-generator/issues"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "IcsGenerator": "src/"
+        }
+    }
+}
