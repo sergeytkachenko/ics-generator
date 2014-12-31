@@ -6,7 +6,7 @@
  * Look at example2.php for a more advance usage method. 
  */
 
-
+require "settings.php";
 require "../invite.php";
 
 $invite = new Invite();

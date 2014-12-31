@@ -6,7 +6,7 @@
  * to file and download it at a later time.
  *  
  */
-
+require "settings.php";
 require "../invite.php";
 
 $invite = new Invite();
