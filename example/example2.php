@@ -7,7 +7,8 @@
  *  
  */
 require "settings.php";
-require "../invite.php";
+
+use IcsGenerator\Invite;
 
 $invite = new Invite();
 $invite

@@ -1,5 +1,7 @@
 
 ## ICS File Generator
+This is a fork of (https://github.com/ahmad/ics.generator). LICENSE is taken from that repo.
+
 This class generates an ICS file that users can download and add to their Calender. It is compatible with any software that supports
 standard ICS files which includes Outlook, Google Calander, iCal and many more.
 
@@ -11,10 +13,20 @@ The library was designed to be simple and get to you up and running in the short
 
 ### Step 1: Getting the library
 
-I would recommend you download the library directly from my git repository (https://github.com/ahmadamin/ics-generator) because it will always 
-be up-to-date with the latest release. All you need is the **invite.php** file which includes the class **Invite** that does all the magic.
+I would recommend you download the library directly from my git repository (https://github.com/hising/ics-generator) because it will always 
+be up-to-date with the latest release. All you need is to have [**Composer installed**](https://getcomposer.org/) and include the class **Invite** that does all the magic.
+
+´´´
+    $ git clone https://github.com/hising/ics-generator.git
+    $ cd ics-generator
+    $ curl -sS https://getcomposer.org/installer | php
+    $ php composer.phar install
+
+´´´
 
 ### Step 2: Usage
+
+Edit the settings.php file and set the correct timezone for your needs.
 
 As mentioned above this class was designed to be as simple as possible to use. All that is required is for you to be a little familiar with Object-Oriented
 PHP or just understand code at least. If you are not familiar with OO PHP that is not a problem because you can just copy and paste this example below into you project
@@ -23,7 +35,9 @@ and modify the details to suite your needs.
 I would highly recommend you **do not alter or modify the invite.php file or class**. You should do all your programming and customization in a separate file.
 <pre>
 // alter path based on where in your file structure the invite.php file is located
-require 'invite.php';
+require "settings.php";
+
+use IcsGenerator\Invite;
 
 $invite = new Invite($unique_id); // You should (not required) provide a UNIQUE ID
 
@@ -41,7 +55,9 @@ $invite -> download();
 </pre>
 If you do now want to use the chaining method as listed about you can use it as such:
 
-    require 'invite.php';
+    require "settings.php";
+    
+    use IcsGenerator\Invite;
 
     $invite = new Invite($unique_id);
 
