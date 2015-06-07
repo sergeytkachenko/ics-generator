@@ -16,13 +16,12 @@ The library was designed to be simple and get to you up and running in the short
 I would recommend you download the library directly from my git repository (https://github.com/hising/ics-generator) because it will always 
 be up-to-date with the latest release. All you need is to have [**Composer installed**](https://getcomposer.org/) and include the class **Invite** that does all the magic.
 
-´´´
+```
     $ git clone https://github.com/hising/ics-generator.git
     $ cd ics-generator
     $ curl -sS https://getcomposer.org/installer | php
     $ php composer.phar install
-
-´´´
+```
 
 ### Step 2: Usage
 
