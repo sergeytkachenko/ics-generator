@@ -1,6 +1,6 @@
 
 ## ICS File Generator
-This is a fork of (https://github.com/ahmad/ics.generator). LICENSE is taken from that repo.
+This is a from of (https://github.com/hising/ics-generator), who is a fork of  of (https://github.com/ahmad/ics.generator). LICENSE is taken from that repo.
 
 This class generates an ICS file that users can download and add to their Calender. It is compatible with any software that supports
 standard ICS files which includes Outlook, Google Calander, iCal and many more.
