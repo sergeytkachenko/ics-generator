@@ -4,77 +4,107 @@ namespace IcsGenerator;
 
 /**
  *
- * Author: Ahmad Amin
+ * Author: Ahmad Amin, Michael Hadorn
  * Email : hello@ahmadamin.com
  * Website: http://ahmadmain.com
  *
  * Copyright (c) 2012 Ahmad Amin. All Rights Reserved.
  *
+ * Fork: https://github.com/hising/ics-generator
+ * 	based on commit Jun 7, 2015 (2ad7e4faa5e6ba5cf69ca857dc6522100b8e4ed7)
  */
-class Invite
-{
+class Invite {
     /**
-     * The event creation date
-     * @var DateTime
+     * The unique event id over all events
+     * @var string
      */
-    private $_created;
+    protected $_uid;
+
+    /**
+     * Defines the filename for direct download
+     * @var string
+     */
+    protected $_filename = 'calendar.ics';
+
+    /**
+     * The event real creation date of the event (not of this ics)
+     * @var \DateTime
+     */
+    protected $_created;
+
+    /**
+     * The event last modified (external)
+     * @var \DateTime
+     */
+    protected $_lastModified;
+
+    /**
+     * This property specifies the identifier for the product that created the iCalendar object.
+     * @var string
+     */
+    protected $_prodid = 'LAUPER COMPUTING';
+
+    /**
+     * If it is an allday event
+     * @var boolean
+     */
+    protected $_allDay = false;
 
     /**
      * The event start date
-     * @var DateTime
+     * @var \DateTime
      */
-    private $_start;
+    protected $_start;
 
     /**
      * The event end date
-     * @var DateTime
+     * @var \DateTime
      */
-    private $_end;
+    protected $_end;
 
     /**
      * The name of the user the invite is coming from
      * @var string
      */
-    private $_fromName;
+    protected $_organizerName;
 
     /**
      * Sender's email
      * @var string
      */
-    private $_fromEmail;
+    protected $_organizerEmail;
 
     /**
-     * The invite body content
+     * The invite description
      * @var string
      */
-    private $_body;
+    protected $_description;
 
     /**
-     *
      * The name of the event
      * @var string
      */
-    private $_name;
+    protected $_summary;
 
     /**
      * The event location
      * @var string
      */
-    private $_location;
+    protected $_location;
 
     /**
      *
      * The content of the invite
      * @var string
      */
-    private $_generated;
+    protected $_generated;
 
     /**
-     * The list of guests
+     * The list of attendees
      * @var array
      */
-    private $_guests = array();
-    private $_savePath = "./invite/";
+    protected $_attendees = array();
+    protected $_savePath = "./invite/";
 
     /**
      *
@@ -86,78 +116,223 @@ class Invite
     const NOT_DOWNLOADED = 5;
 
     /**
-     *
      * Downloaded constant
-     *
-     * @var cost
-     *
+     * @var const
      */
     const DOWNLOADED = 10;
 
-    public function __construct($uid = null)
-    {
+
+    public function __construct($uid = null) {
         if (null === $uid) {
-            $this->_uid = uniqid(rand(0, getmypid())) . "@ahmadamin.com";
+            $this->_uid = uniqid(rand(0, getmypid())) . "@laupercomputing.ch";
         } else {
-            $this->_uid = $uid . "@ahmadamin.com";
+            $this->_uid = $uid . "@laupercomputing.ch";
         }
 
         if (!isset($_SESSION['calander_invite_downloaded'])) {
             $_SESSION['calander_invite_downloaded'] = self::NOT_DOWNLOADED;
         }
+
         return $this;
     }
 
-    public function getUID()
-    {
+    /**
+     * Return the UID (construct param || random + "@laupercomputing.ch")
+     * @return string
+     */
+    public function getUID() {
         return $this->_uid;
     }
 
     /**
-     *
-     * Set the event stat and end time.
-     *
-     * @param DateTime $start
-     * @param DateTime $end
-     * @return \Invite
+     * @return string
      */
-    public function setDate(\DateTime $start, \DateTime $end)
-    {
-        $this->setStartDate($start);
-        $this->setEndDate($end);
+    public function getFilename() {
+        return $this->_filename;
+    }
 
+    /**
+     * Set full filename with filetype
+     * @param string $filename
+     * @return $this
+     */
+    public function setFilename($filename) {
+        $this->_filename = $filename;
         return $this;
     }
 
     /**
-     * Set the creation datetime
-     * @param DateTime $created
-     * @return \Invite
+     * @return string
      */
-    public function setCreated(\DateTime $created){
-        $this->_created = $created;
+    public function getProdid() {
+        return $this->_prodid;
+    }
+
+    /**
+     * @param string $prodid
+     */
+    public function setProdid($prodid) {
+        $this->_prodid = $prodid;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAllDay() {
+        return $this->_allDay;
+    }
+
+    /**
+     * @param boolean $allDay
+     * @return $this
+     */
+    public function setAllDay($allDay) {
+        $this->_allDay = $allDay;
         return $this;
     }
+
+    /**
+     * Get the start time set for the even
+     * @param boolean $icsFormat
+     * @return string
+     */
+    public function getStart($icsFormat = false) {
+        if ($icsFormat) {
+            return $this->icsAllDayDate($this->_start);
+        }
+        return $this->_start;
+    }
+
     /**
      * Set the start datetime
-     * @param DateTime $start
-     * @return \Invite
+     * @param \DateTime $start
+     * @return $this
      */
-    public function setStart(\DateTime $start)
-    {
+    public function setStart(\DateTime $start) {
         $this->_start = $start;
         return $this;
     }
 
     /**
-     * Set the end datetime
-     * @param DateTime $end
-     * @return \Invite
+     * Get the end time set for the event
+     * @param boolean $icsFormat
+     * @return string
      */
-    public function setEnd(\DateTime $end)
-    {
+    public function getEnd($icsFormat = false) {
+        if ($icsFormat) {
+            if ($this->isAllDay()) {
+                // add one day for allday events
+                $this->_end->add(new \DateInterval('P1D'));
+            }
+            return $this->icsAllDayDate($this->_end);
+        }
+        return $this->_end;
+    }
+
+    /**
+     * Set the end datetime
+     * @param \DateTime $end
+     * @return $this
+     */
+    public function setEnd(\DateTime $end) {
         $this->_end = $end;
         return $this;
+    }
+
+    /**
+     * Return the date formated for ics incl handling of allday events
+     * @param $dateTime
+     * @return string
+     */
+    protected function icsAllDayDate($dateTime) {
+        $format = 'Ymd\THis';
+        if ($this->isAllDay()) {
+            // only add date (without time) if allday event
+            $format = 'Ymd';
+        }
+        return self::icsDate($dateTime, $format);
+    }
+
+    /**
+     * Get the creation time set for the event
+     * @param bool $icsFormat
+     * @return string
+     * @internal param null $formatted
+     */
+    public function getCreated($icsFormat = false) {
+        if ($icsFormat) {
+            // return $this->_created->format("Ymd\THis\Z");
+            return self::icsDate($this->_created);
+        }
+        return $this->_created;
+    }
+
+    /**
+     * Set the creation datetime
+     * @param \DateTime $created
+     * @return $this
+     */
+    public function setCreated(\DateTime $created) {
+        $this->_created = $created;
+        return $this;
+    }
+
+    /**
+     * @param bool $icsFormat
+     * @return \DateTime
+     */
+    public function getLastModified($icsFormat = false) {
+        if ($icsFormat) {
+            // return $this->_created->format("Ymd\THis\Z");
+            return self::icsDate($this->_lastModified);
+        }
+        return $this->_lastModified;
+    }
+
+    /**
+     * @param \DateTime $lastModified
+     * @return $this
+     */
+    public function setLastModified($lastModified) {
+        $this->_lastModified = $lastModified;
+        return $this;
+    }
+
+    /**
+     * generate a time stamp
+     * @return string
+     */
+    protected function getTimestamp() {
+        $date = new \DateTime();
+        return self::icsDate($date);
+    }
+
+    /**
+     * @param \DateTime $dateTime
+     * @return string|boolean
+     */
+    protected static function icsDate($dateTime, $format = 'Ymd\THis') {
+        $return = false;
+        if (get_class($dateTime) == 'DateTime') {
+            $return = $dateTime->format($format);
+        }
+        return $return;
+    }
+
+    /**
+     * Get the name of the invite sender
+     * @return string
+     */
+    public function getOrganizerName() {
+        return $this->_organizerName;
+    }
+
+    /**
+     * Get the email where the email will be sent from
+     * @return string
+     */
+    public function getOrganizerEmail() {
+        return $this->_organizerEmail;
     }
 
     /**
@@ -166,233 +341,31 @@ class Invite
      *
      * @param string $email
      * @param string $name
-     * @return \Invite
+     * @return $this
      */
-    public function setFrom($email, $name = null)
-    {
+    public function setOrganizer($email, $name = null) {
         if (null === $name) {
             $name = $email;
         }
-
-        $this->_fromEmail = $email;
-        $this->_fromName = $name;
-
+        $this->_organizerEmail = $email;
+        $this->_organizerName = $name;
         return $this;
     }
 
     /**
-     *
-     * An alias of setFrom()
-     *
-     * @param string $email
-     * @param string $name
-     * @return \Invite
-     *
+     * @return string
      */
-    public function setOrganizer($email, $name = null)
-    {
-        return $this->setFrom($email, $name);
+    public function getDescription() {
+        return $this->_description;
     }
 
     /**
-     * Set the name of the event
-     * @param string $name
-     * @return \Invite
-     */
-    public function setName($name)
-    {
-        $this->_name = $name;
-        return $this;
-    }
-
-    /**
-     * An alies of setName
-     * @param string $subject
-     * @return \Invite
-     */
-    public function setSubject($subject)
-    {
-        $this->setName($subject);
-        return $this;
-    }
-
-    /**
-     *
-     * An alies of setSubject()
-     *
-     * @param string $summary
-     * @return \Invite
-     */
-    public function setSummary($summary)
-    {
-        $this->setSubject($summary);
-        return $this;
-    }
-
-    /**
-     *
-     * Set the invite body content
-     *
-     * @param string $body
-     * @return \Invite
-     */
-    public function setBody($body)
-    {
-        $this->_body = $body;
-        return $this;
-    }
-
-    /**
-     *
-     * An alies of setBody().
      * @param string $desc
-     * @return \Invite
+     * @return $this
      */
-    public function setDescription($desc)
-    {
-        $this->setBody($desc);
+    public function setDescription($desc) {
+        $this->_description = $desc;
         return $this;
-    }
-
-    /**
-     *
-     * Set the location where the event will take place
-     * @param string $location
-     * @return \Invite
-     */
-    public function setLocation($location)
-    {
-        $this->_location = $location;
-        return $this;
-    }
-
-    /**
-     * An alies of setLocation()
-     * @param string $place
-     * @return string
-     */
-    public function setPlace($place)
-    {
-        return $this->setLocation($place);
-    }
-
-    /**
-     *
-     * Add a guest to the list of attendees
-     * @param type $email
-     * @param type $name
-     * @return \Invite
-     */
-    public function addGuest($email, $name = null)
-    {
-        if (null === $name) {
-            $name = $email;
-        }
-
-        if (!isset($this->_guest[$email])) {
-            $this->_guests[$email] = $name;
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * Remove a guest from the list
-     *
-     * @param string $email
-     * @return \Invite
-     */
-    public function removeGuest($email)
-    {
-        if (isset($this->_guests[$email])) {
-            unset($this->_guests[$email]);
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * An alies of remove guest
-     *
-     * @param string $email
-     * @return \Invite
-     */
-    public function removeAttendee($email)
-    {
-        return $this->removeGuest($email);
-    }
-
-    /**
-     *
-     * Clear a the guest list
-     * @return \Invite
-     */
-    public function clearGuests()
-    {
-        $this->_guests = array();
-        return $this;
-    }
-
-    /**
-     *
-     * An alies of clear guests
-     * @return \Invite
-     */
-    public function clearAttendees()
-    {
-        return $this->clearGuests();
-    }
-
-    /**
-     *
-     * Get all guest that's currently set for an this events.
-     * @return array
-     *
-     */
-    public function getGuests()
-    {
-        return $this->_guests;
-    }
-
-    /**
-     * An alies of getGuests();
-     * @return array
-     */
-    public function getAttendees()
-    {
-        return $this->getGuests();
-    }
-
-    /**
-     * An Alies of add guest
-     * @param string $email
-     * @param string $name
-     * @return Invite
-     */
-    public function addAttendee($email, $name = null)
-    {
-        return $this->addGuest($email, $name);
-    }
-
-    /**
-     *
-     * Get the location where the event will be held
-     * @return type
-     */
-    public function getLocation()
-    {
-        return $this->_location;
-    }
-
-    /**
-     * An alies of getLocation()
-     * @return string
-     */
-    public function getPlace()
-    {
-        return $this->getLocation();
     }
 
     /**
@@ -400,108 +373,100 @@ class Invite
      * Get the event name
      * @return string
      */
-    public function getName()
-    {
-        return $this->_name;
+    public function getSummary() {
+        return $this->_summary;
     }
 
     /**
-     * An alies of getName();
-     * @return string
+     * Set the name of the event
+     * @param string $summary
+     * @return $this
      */
-    public function getSummary()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * Get the current body content
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->_body;
-    }
-
-    /**
-     * An alies of getBody()
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->getBody();
-    }
-
-    /**
-     * Just to do it.
-     * @return \Invite
-     */
-    public function __toString()
-    {
+    public function setSummary($summary) {
+        $this->_summary = $summary;
         return $this;
     }
 
     /**
-     * Get the name of the invite sender
+     *
+     * Get the location where the event will be held
      * @return string
      */
-    public function getFromName()
-    {
-        return $this->_fromName;
+    public function getLocation() {
+        return $this->_location;
     }
 
     /**
-     * Get the email where the email will be sent from
-     * @return string
+     *
+     * Set the location where the event will take place
+     * @param string $location
+     * @return $this
      */
-    public function getFromEmail()
-    {
-        return $this->_fromEmail;
+    public function setLocation($location) {
+        $this->_location = $location;
+        return $this;
     }
 
     /**
-     * Get the creation time set for the event
-     * @return string
+     *
+     * Get all attendee that's currently set for an this events.
+     * @return array
+     *
      */
-    public function getCreated($formatted = null)
-    {
-        if (null !== $formatted && $this->_created!=null) {
-            return $this->_created->format("Ymd\THis\Z");
+    public function getAttendees() {
+        return $this->_attendees;
+    }
+
+    /**
+     *
+     * Add a attendee to the list of attendees
+     * @param string $email
+     * @param string $name
+     * @return $this
+     */
+    public function addAttendee($email, $name = null) {
+        if (null === $name) {
+            $name = $email;
         }
 
-        return $this->_created;
-    }
-    /**
-     * Get the start time set for the even
-     * @return string
-     */
-    public function getStart($formatted = null)
-    {
-        if (null !== $formatted && $this->_start!=null) {
-            return $this->_start->format("Ymd\THis\Z");
+        if (!isset($this->_attendees[$email])) {
+            $this->_attendees[$email] = $name;
         }
 
-        return $this->_start;
+        return $this;
     }
 
     /**
-     * Get the end time set for the event
-     * @return string
+     *
+     * Remove a attendee from the list
+     *
+     * @param string $email
+     * @return $this
      */
-    public function getEnd($formatted = null)
-    {
-        if (null !== $formatted && $this->_end!=null) {
-            return $this->_end->format("Ymd\THis\Z");
+    public function removeAttendee($email) {
+        if (isset($this->_attendees[$email])) {
+            unset($this->_attendees[$email]);
         }
-        return $this->_end;
+
+        return $this;
     }
+
+    /**
+     *
+     * Clear a the attendee list
+     * @return $this
+     */
+    public function clearAttendees() {
+        $this->_attendees = array();
+        return $this;
+    }
+
 
     /**
      *
      * Call this function to download the invite.
      */
-    public function download()
-    {
+    public function download() {
         $_SESSION['calander_invite_downloaded'] = self::DOWNLOADED;
         $generate = $this->_generate();
         header("Pragma: public");
@@ -510,7 +475,7 @@ class Invite
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
         header("Content-type: application/octet-stream");
-        header("Content-Disposition: attachment; filename=\"invite.ics\"");
+        header("Content-Disposition: attachment; filename=\"".$this->getFilename()."\"");
         header("Content-Transfer-Encoding: binary");
         header("Content-Length: " . strlen($generate));
         print $generate;
@@ -522,11 +487,10 @@ class Invite
      *
      * @param string $path
      * @param string $name
-     * @return \Invite
+     * @return $this
      *
      */
-    public function save($path = null, $name = null)
-    {
+    public function save($path = null, $name = null) {
         if (null === $path) {
             $path = $this->_savePath;
         }
@@ -539,7 +503,7 @@ class Invite
         if (!is_dir($path)) {
             try {
                 mkdir($path, 0777, TRUE);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 die('Unabled to create save path.');
             }
         }
@@ -547,12 +511,12 @@ class Invite
         if (($data = $this->getInviteContent()) == TRUE) {
             try {
                 $handler = fopen($path . $name, 'w+');
-                $f = fwrite($handler, $data);
+                fwrite($handler, $data);
                 fclose($handler);
 
                 // saving the save name
                 $_SESSION['savepath'] = $path . $name;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 die('Unabled to write invite to file.');
             }
         }
@@ -564,14 +528,14 @@ class Invite
      * Get the saved invite path
      * @return string|boolean
      */
-    public static function getSavedPath()
-    {
+    public static function getSavedPath() {
         if (isset($_SESSION['savepath'])) {
             return $_SESSION['savepath'];
         }
 
         return false;
     }
+
 
     /**
      *
@@ -580,8 +544,7 @@ class Invite
      * @return boolean
      *
      */
-    public static function isDownloaded()
-    {
+    public static function isDownloaded() {
         if ($_SESSION['calander_invite_downloaded'] == self::DOWNLOADED) {
             return true;
         }
@@ -589,10 +552,10 @@ class Invite
         return false;
     }
 
-    public function isValid()
-    {
-        if ($this->_created || $this->_start || $this->_end || $this->_name ||
-            $this->_fromEmail || $this->_fromName || is_array($this->_guests)) {
+    public function isValid() {
+        if ($this->_created || $this->_start || $this->_end || $this->_summary ||
+                $this->_organizerEmail || $this->_organizerName || is_array($this->_attendees)
+        ) {
             return true;
         }
 
@@ -605,8 +568,7 @@ class Invite
      * was unable to be generated.
      * @return string|boolean
      */
-    public function getInviteContent()
-    {
+    public function getInviteContent() {
         if (!$this->_generated) {
             if ($this->isValid()) {
                 if ($this->_generate()) {
@@ -623,11 +585,10 @@ class Invite
      *
      * Generate the content for the invite.
      *
-     * @return \Invite
+     * @return $this
      *
      */
-    public function generate()
-    {
+    public function generate() {
         $this->_generate();
         return $this;
     }
@@ -639,35 +600,59 @@ class Invite
      *
      * @return string|bool
      */
-    private function _generate()
-    {
+    protected function _generate() {
         if ($this->isValid()) {
 
-            $content = "BEGIN:VCALENDAR\n";
-            $content .= "VERSION:2.0\n";
-            $content .= "CALSCALE:GREGORIAN\n";
-            $content .= "METHOD:REQUEST\n";
-            $content .= "BEGIN:VEVENT\n";
-            $content .= "UID:{$this->getUID()}\n";
-            $content .= "DTSTART:{$this->getStart(true)}\n";
-            $content .= "DTEND:{$this->getEnd(true)}\n";
-            $content .= "DTSTAMP:{$this->getStart(true)}\n";
-            $content .= "ORGANIZER;CN={$this->getFromName()}:mailto:{$this->getFromEmail()}\n";
+            $content = "BEGIN:VCALENDAR\r\n";
+            $content .= "VERSION:2.0\r\n";
+            $content .= "PRODID:" . $this->getProdid() . "\r\n";
+            $content .= "CALSCALE:GREGORIAN\r\n";
+            $content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
 
-            foreach ($this->getAttendees() as $email => $name)
-            {
-                $content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\n";
+            $timezoneIdentifier = '';
+            if (!$this->isAllDay()) {
+                // define timezone static -> will break in outlook if allday and timezone is set
+                $timezoneIdentifier = ';TZID=Europe/Zurich';
+                $content .= "BEGIN:VTIMEZONE
+TZID:Europe/Zurich
+X-LIC-LOCATION:Europe/Zurich
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=3
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=10
+END:STANDARD
+END:VTIMEZONE\r\n";
             }
 
-            $content .= "CREATED:{$this->getCreated(true)}\n";
-            $content .= "DESCRIPTION:{$this->getDescription()}\n";
-            $content .= "LAST-MODIFIED:{$this->getStart(true)}\n";
-            $content .= "LOCATION:{$this->getLocation()}\n";
-            $content .= "SUMMARY:{$this->getName()}\n";
-            $content .= "SEQUENCE:0\n";
-            $content .= "STATUS:NEEDS-ACTION\n";
-            $content .= "TRANSP:OPAQUE\n";
-            $content .= "END:VEVENT\n";
+            $content .= "BEGIN:VEVENT\r\n";
+            $content .= "UID:{$this->getUID()}\r\n";
+            $content .= "DTSTART".$timezoneIdentifier.":{$this->getStart(true)}\r\n";
+            $content .= "DTEND".$timezoneIdentifier.":{$this->getEnd(true)}\r\n";
+            $content .= "DTSTAMP".$timezoneIdentifier.":{$this->getTimestamp()}\r\n";
+            $content .= "ORGANIZER;CN={$this->getOrganizerName()}:mailto:{$this->getOrganizerEmail()}\r\n";
+
+            foreach ($this->getAttendees() as $email => $name) {
+                $content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\r\n";
+            }
+
+            $content .= "CREATED".$timezoneIdentifier.":{$this->getCreated(true)}\r\n";
+            $content .= "DESCRIPTION:{$this->getDescription()}\r\n";
+            $content .= "LAST-MODIFIED".$timezoneIdentifier.":{$this->getLastModified(true)}\r\n";
+            $content .= "LOCATION:{$this->getLocation()}\r\n";
+            $content .= "SUMMARY:{$this->getSummary()}\r\n";
+            $content .= "SEQUENCE:0\r\n";
+            // $content .= "STATUS:NEEDS-ACTION\r\n";
+            $content .= "TRANSP:OPAQUE\r\n";
+            $content .= "END:VEVENT\r\n";
             $content .= "END:VCALENDAR";
 
             $this->_generated = $content;
@@ -676,5 +661,4 @@ class Invite
 
         return false;
     }
-
 }
