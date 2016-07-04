@@ -12,7 +12,7 @@ use IcsGenerator\Invite;
 
 $invite = new Invite();
 $invite
-	->setSubject("Test Demo Invite")
+	->setSummary("Test Demo Invite")
 	->setDescription("The is a test invite for you to see how this thing actually works")
 	->setStart(new DateTime('2012-05-10 01:00PM EDT'))
 	->setEnd(new DateTime('2012-05-10 02:00PM EDT'))
