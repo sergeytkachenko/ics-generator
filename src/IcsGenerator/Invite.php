@@ -42,7 +42,7 @@ class Invite {
      * This property specifies the identifier for the product that created the iCalendar object.
      * @var string
      */
-    protected $_prodid = 'LAUPER COMPUTING';
+    protected static $_prodid = 'LAUPER COMPUTING';
 
     /**
      * If it is an allday event
@@ -604,29 +604,15 @@ class Invite {
         return $this;
     }
 
-    /**
-     *
-     * The function generates the actual content of the ICS
-     * file and returns it.
-     *
-     * @return string|bool
-     */
-    protected function _generate() {
-        if ($this->isValid()) {
-
-            $content = "BEGIN:VCALENDAR\r\n";
-            $content .= "VERSION:2.0\r\n";
-            $content .= "PRODID:" . $this->getProdid() . "\r\n";
-            $content .= "CALSCALE:GREGORIAN\r\n";
-            $content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
-
-            $timezoneIdentifier = '';
-            if (!$this->isAllDay()) {
-                // define timezone static -> will break in outlook if allday and timezone is set
-                $timezoneIdentifier = ';TZID=Europe/Zurich';
-                $content .= "BEGIN:VTIMEZONE
-TZID:Europe/Zurich
-X-LIC-LOCATION:Europe/Zurich
+    public static function getStartHeaderMetaContent() {
+		$content = "BEGIN:VCALENDAR\r\n";
+		$content .= "VERSION:2.0\r\n";
+		$content .= "PRODID:" . self::$_prodid . "\r\n";
+		$content .= "CALSCALE:GREGORIAN\r\n";
+		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
+		$content .= "BEGIN:VTIMEZONE
+TZID:Europe/Kiev
+X-LIC-LOCATION:Europe/Kiev
 BEGIN:DAYLIGHT
 TZOFFSETFROM:+0100
 TZOFFSETTO:+0200
@@ -642,9 +628,24 @@ DTSTART:19701025T030000
 RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=10
 END:STANDARD
 END:VTIMEZONE\r\n";
-            }
+		return $content;
+	}
 
-            $content .= "BEGIN:VEVENT\r\n";
+	public static function getEndHeaderMetaContent() {
+		return "END:VCALENDAR";
+	}
+
+    /**
+     *
+     * The function generates the actual content of the ICS
+     * file and returns it.
+     *
+     * @return string|bool
+     */
+    protected function _generate() {
+        if ($this->isValid()) {
+			$timezoneIdentifier = ';TZID=Europe/Kiev';
+            $content = "BEGIN:VEVENT\r\n";
             $content .= "UID:{$this->getUID()}\r\n";
             $content .= "DTSTART".$timezoneIdentifier.":{$this->getStart(true)}\r\n";
             $content .= "DTEND".$timezoneIdentifier.":{$this->getEnd(true)}\r\n";
@@ -654,7 +655,6 @@ END:VTIMEZONE\r\n";
             foreach ($this->getAttendees() as $email => $name) {
                 $content .= "ATTENDEE;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN={$name};X-NUM-GUESTS=0:mailto:{$email}\r\n";
             }
-
             $content .= "CREATED".$timezoneIdentifier.":{$this->getCreated(true)}\r\n";
             $content .= "DESCRIPTION:{$this->getDescription()}\r\n";
             $content .= "LAST-MODIFIED".$timezoneIdentifier.":{$this->getLastModified(true)}\r\n";
@@ -665,7 +665,6 @@ END:VTIMEZONE\r\n";
             // $content .= "STATUS:NEEDS-ACTION\r\n";
             $content .= "TRANSP:OPAQUE\r\n";
             $content .= "END:VEVENT\r\n";
-            $content .= "END:VCALENDAR";
 
             $this->_generated = $content;
             return $this->_generated;
