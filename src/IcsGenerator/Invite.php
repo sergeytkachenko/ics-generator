@@ -86,7 +86,9 @@ class Invite {
      */
     protected $_summary;
 
-    /**
+	private $_url;
+
+	/**
      * The event location
      * @var string
      */
@@ -121,8 +123,7 @@ class Invite {
      */
     const DOWNLOADED = 10;
 
-
-    public function __construct($uid = null) {
+	public function __construct($uid = null) {
         if (null === $uid) {
             $this->_uid = uniqid(rand(0, getmypid())) . "@laupercomputing.ch";
         } else {
@@ -387,6 +388,16 @@ class Invite {
         return $this;
     }
 
+	/**
+	 * Set the url of the event
+	 * @param String $url
+	 * @return $this
+	 */
+	public function setUrl($url) {
+		$this->_url = $url;
+		return $this;
+	}
+
     /**
      *
      * Get the location where the event will be held
@@ -649,6 +660,7 @@ END:VTIMEZONE\r\n";
             $content .= "LAST-MODIFIED".$timezoneIdentifier.":{$this->getLastModified(true)}\r\n";
             $content .= "LOCATION:{$this->getLocation()}\r\n";
             $content .= "SUMMARY:{$this->getSummary()}\r\n";
+            $content .= "URL:{$this->getUrl()}\r\n";
             $content .= "SEQUENCE:0\r\n";
             // $content .= "STATUS:NEEDS-ACTION\r\n";
             $content .= "TRANSP:OPAQUE\r\n";
@@ -661,4 +673,8 @@ END:VTIMEZONE\r\n";
 
         return false;
     }
+
+	private function getUrl() {
+		return $this->_url;
+	}
 }
