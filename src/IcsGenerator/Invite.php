@@ -128,13 +128,8 @@ class Invite {
         if (null === $uid) {
             $this->_uid = uniqid(rand(0, getmypid())) . uniqid(rand(0, getmypid()));
         } else {
-            $this->_uid = $uid . uniqid(rand(0, getmypid()));
+            $this->_uid = $uid;
         }
-
-        if (!isset($_SESSION['calander_invite_downloaded'])) {
-            $_SESSION['calander_invite_downloaded'] = self::NOT_DOWNLOADED;
-        }
-
         return $this;
     }
 
