@@ -125,9 +125,9 @@ class Invite {
 
 	public function __construct($uid = null) {
         if (null === $uid) {
-            $this->_uid = uniqid(rand(0, getmypid())) . "@laupercomputing.ch";
+            $this->_uid = uniqid(rand(0, getmypid())) . uniqid(rand(0, getmypid()));
         } else {
-            $this->_uid = $uid . "@laupercomputing.ch";
+            $this->_uid = $uid . uniqid(rand(0, getmypid()));
         }
 
         if (!isset($_SESSION['calander_invite_downloaded'])) {
