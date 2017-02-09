@@ -14,7 +14,8 @@ namespace IcsGenerator;
  * 	based on commit Jun 7, 2015 (2ad7e4faa5e6ba5cf69ca857dc6522100b8e4ed7)
  */
 class Invite {
-    /**
+	private static $_originUrl;
+	/**
      * The unique event id over all events
      * @var string
      */
@@ -137,7 +138,14 @@ class Invite {
         return $this;
     }
 
-    /**
+	/**
+	 * @param mixed $originUrl
+	 */
+	public static function setOriginUrl($originUrl) {
+		self::$_originUrl = $originUrl;
+	}
+
+	/**
      * Return the UID (construct param || random + "@laupercomputing.ch")
      * @return string
      */
@@ -608,6 +616,7 @@ class Invite {
 		$content = "BEGIN:VCALENDAR\r\n";
 		$content .= "VERSION:2.0\r\n";
 		$content .= "PRODID:" . self::$_prodid . "\r\n";
+		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
 		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
 		$content .= "BEGIN:VTIMEZONE
