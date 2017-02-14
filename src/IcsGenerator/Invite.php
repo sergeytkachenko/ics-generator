@@ -15,6 +15,7 @@ namespace IcsGenerator;
  */
 class Invite {
 	private static $_originUrl;
+	private static $_calendarName;
 	/**
      * The unique event id over all events
      * @var string
@@ -138,6 +139,13 @@ class Invite {
 	 */
 	public static function setOriginUrl($originUrl) {
 		self::$_originUrl = $originUrl;
+	}
+
+	/**
+	 * @param mixed $calendarName
+	 */
+	public static function setCalendarName($calendarName) {
+		self::$_calendarName = $calendarName;
 	}
 
 	/**
@@ -611,6 +619,7 @@ class Invite {
 		$content = "BEGIN:VCALENDAR\r\n";
 		$content .= "VERSION:2.0\r\n";
 		$content .= "PRODID:" . self::$_prodid . "\r\n";
+		$content .= "X-WR-CALNAME;CHARSET=utf-8:" . self::$_calendarName . "\r\n";
 		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
 		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
