@@ -620,6 +620,12 @@ class Invite {
 		$content .= "VERSION:2.0\r\n";
 		$content .= "PRODID:" . self::$_prodid . "\r\n";
 		$content .= "X-WR-CALNAME;CHARSET=utf-8:" . self::$_calendarName . "\r\n";
+		$content .= "NAME:" . self::$_calendarName . "\r\n";
+		$content .= "DESCRIPTION:...\r\n";
+		$content .= "X-WR-CALDESC:...\r\n";
+		$content .= "TIMEZONE-ID:Europe/Kiev\r\n";
+		$content .= "X-WR-TIMEZONE:Europe/Kiev\r\n";
+		$content .= "COLOR:34:50:105\r\n";
 		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
 		$content .= "REFRESH-INTERVAL;VALUE=DURATION:PT12H\r\n";
