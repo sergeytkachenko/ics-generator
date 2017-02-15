@@ -623,14 +623,30 @@ class Invite {
 		$content .= "NAME:" . self::$_calendarName . "\r\n";
 		$content .= "DESCRIPTION:...\r\n";
 		$content .= "X-WR-CALDESC:...\r\n";
-		$content .= "TIMEZONE-ID:Europe/Kiev\r\n";
-		$content .= "X-WR-TIMEZONE:Europe/Kiev\r\n";
 		$content .= "COLOR:34:50:105\r\n";
 		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
-		$content .= "REFRESH-INTERVAL;VALUE=DURATION:PT24H\r\n";
-		$content .= "X-PUBLISHED-TTL:PT24H\r\n";
+		$content .= "REFRESH-INTERVAL;VALUE=DURATION:PT12H\r\n";
+		$content .= "X-PUBLISHED-TTL:PT12H\r\n";
 		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
+		$content .= "BEGIN:VTIMEZONE
+TZID:Europe/Kiev
+X-LIC-LOCATION:Europe/Kiev
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=3
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=10
+END:STANDARD
+END:VTIMEZONE\r\n";
 		return $content;
 	}
 
