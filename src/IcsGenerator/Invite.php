@@ -626,8 +626,8 @@ class Invite {
 		$content .= "COLOR:34:50:105\r\n";
 		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
-		$content .= "REFRESH-INTERVAL;VALUE=DURATION:PT12H\r\n";
-		$content .= "X-PUBLISHED-TTL:PT12H\r\n";
+		$content .= "REFRESH-INTERVAL;VALUE=DURATION:PT24H\r\n";
+		$content .= "X-PUBLISHED-TTL:PT24H\r\n";
 		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
 		$content .= "BEGIN:VTIMEZONE
 TZID:Europe/Kiev
