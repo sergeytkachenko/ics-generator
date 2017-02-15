@@ -622,6 +622,7 @@ class Invite {
 		$content .= "X-WR-CALNAME;CHARSET=utf-8:" . self::$_calendarName . "\r\n";
 		$content .= "X-ORIGINAL-URL:" . self::$_originUrl . "\r\n";
 		$content .= "CALSCALE:GREGORIAN\r\n";
+		$content .= "REFRESH-INTERVAL;VALUE=DURATION:P1D\r\n";
 		$content .= "METHOD:PUBLISH\r\n"; // will ask in which calendar (at least on apple calendar)
 		$content .= "BEGIN:VTIMEZONE
 TZID:Europe/Kiev
