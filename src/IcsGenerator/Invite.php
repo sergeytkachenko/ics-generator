@@ -715,8 +715,10 @@ END:VALARM\r\n";
 
 	/**
 	 * @param mixed $alarm
+	 * @return $this
 	 */
 	public function setAlarm($alarm) {
 		$this->_alarm = $alarm;
+		return $this;
 	}
 }
