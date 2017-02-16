@@ -16,6 +16,8 @@ namespace IcsGenerator;
 class Invite {
 	private static $_originUrl;
 	private static $_calendarName;
+
+	private $_alarm;
 	/**
      * The unique event id over all events
      * @var string
@@ -124,6 +126,7 @@ class Invite {
      * @var const
      */
     const DOWNLOADED = 10;
+
 
 	public function __construct($uid = null) {
         if (null === $uid) {
@@ -647,13 +650,6 @@ DTSTART:19701025T030000
 RRULE:FREQ=YEARLY;INTERVAL=1;BYDAY=-1SU;BYMONTH=10
 END:STANDARD
 END:VTIMEZONE\r\n";
-		$content .= "BEGIN:VALARM
-TRIGGER:-PT3D
-REPEAT:1
-DURATION:PT15M
-ACTION:DISPLAY
-DESCRIPTION:Reminder
-END:VALARM\r\n";
 		return $content;
 	}
 
@@ -690,6 +686,7 @@ END:VALARM\r\n";
             $content .= "SEQUENCE:0\r\n";
             // $content .= "STATUS:NEEDS-ACTION\r\n";
             $content .= "TRANSP:OPAQUE\r\n";
+            $content .= $this->getAlarm();
             $content .= "END:VEVENT\r\n";
 
             $this->_generated = $content;
@@ -699,7 +696,27 @@ END:VALARM\r\n";
         return false;
     }
 
+    protected function getAlarm() {
+		$alarm = $this->_alarm;
+		if ($alarm) {
+			return "BEGIN:VALARM
+TRIGGER:-PT{$alarm}
+REPEAT:1
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM\r\n";
+		}
+		return "";
+	}
+
 	private function getUrl() {
 		return $this->_url;
+	}
+
+	/**
+	 * @param mixed $alarm
+	 */
+	public function setAlarm($alarm) {
+		$this->_alarm = $alarm;
 	}
 }
