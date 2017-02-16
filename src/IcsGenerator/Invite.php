@@ -700,7 +700,7 @@ END:VTIMEZONE\r\n";
 		$alarm = $this->_alarm;
 		if ($alarm) {
 			return "BEGIN:VALARM
-TRIGGER:-PT{$alarm}
+TRIGGER:{$alarm}
 REPEAT:1
 ACTION:DISPLAY
 DESCRIPTION:Reminder
